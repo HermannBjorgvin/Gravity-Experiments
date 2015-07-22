@@ -14,7 +14,7 @@ define([
 	// Simulation settings
 	var calculationsPerSec = 100; // How many gravitational calculations are performed a second
 	var calculationSpeed = 1; // Speed comes at the cost of accuracy
-	var massMultiplier = undefined; // How exagurated the size of the objects are (humans like that)
+	var massMultiplier = undefined; // How exaggerated the size of the objects are (humans like that)
 
 	var spacetimeLoop; // Variable that stores our setInterval loop
 
@@ -29,19 +29,6 @@ define([
 
 		return velocity * object.mass;
 	}
-
-	// WRONG MATH DON'T USE, also just throw this function away, I currently have no use for it
-	function getRelativeMomentum(objectA, objectB){
-		// WRONG MATH DON'T USE
-		var relative = Math.sqrt(
-			Math.pow(objectA.velX - objectB.velX, 2)+
-			Math.pow(objectA.velY - objectB.velY, 2)
-		);
-
-		// WRONG MATH DON'T USE
-		return relative;
-	}
-    // END OF WRONG MATH... hopefully
 
 	function pythagoras(objectA, objectB){
 		var distance = Math.sqrt(
@@ -145,11 +132,11 @@ define([
 		*/
 
 		// Find clustering objects and join them - unfinished
-		// THIS IS CURRENTLY PHYSICALLY INNACCURATE, WILL FIX SOON
-		for (var a = spacetime.length - 1; a >= 0; a--) {
+		// THIS IS CURRENTLY PHYSICALLY INACCURATE, WILL FIX SOON
+		for (var a = 0; a < spacetime.length; a++){
 			var objectA = spacetime[a];
-
-			for (var b = spacetime.length - 1; b >= 0; b--) {
+			
+			for (var b = 0; b < spacetime.length; b++){
 				if (a !== b) {
 					var objectB = spacetime[b];
 
@@ -169,16 +156,15 @@ define([
 						var massRatio = objectA.mass/newMass;
 
 						var newMomentum = getMomentum(objectA) + getMomentum(objectB);
-						var momentumRatio = newMomentum/getMomentum(objectA);
 
 						var newDensity = objectA.density*massRatio + objectB.density*(1-massRatio);
 
 						var newObject = {
 							cameraFocus: camFocus,
-							x: objectA.x*getMomentum(objectA)/newMomentum + objectB.x*getMomentum(objectB)/newMomentum, // Change later
-							y: objectA.y*getMomentum(objectA)/newMomentum + objectB.y*getMomentum(objectB)/newMomentum, // Change later
-							velX: objectA.velX*objectA.mass/newMass + objectB.velX*objectB.mass/newMass, // Change later
-							velY: objectA.velY*objectA.mass/newMass + objectB.velY*objectB.mass/newMass, // Change later
+							x: (objectA.x * objectA.mass + objectB.x * objectB.mass)/newMass,
+							y: (objectA.y * objectA.mass + objectB.y * objectB.mass)/newMass,
+							velX: (objectA.velX*objectA.mass + objectB.velX*objectB.mass)/newMass, // Change later
+							velY: (objectA.velY*objectA.mass + objectB.velY*objectB.mass)/newMass, // Change later
 							deltaX:0, // useless info
 							deltaY:0, // useless info
 							mass: newMass, 
